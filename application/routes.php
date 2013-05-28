@@ -43,26 +43,6 @@ Route::get('/', function()
 	return View::make('templates.main')->with('isLanding', true);
 });
 
-Route::get('login', function() {
-	return View::make('pages.login');
-});
-
-Route::post('login', function() {
-	$userdata = array(
-		'username' => Input::get('username'),
-		'password' => Input::get('password')
-	);
-	if ( Auth::attempt($userdata) )
-	{
-		return Redirect::to('/');
-	}
-	else
-	{
-		return Redirect::to('login')
-			->with('login_errors', true);
-	}
-});
-
 //we need to check for auth before attempting to do this action
 Route::get('renta', array('before' => 'auth', 'do' => function() {
 	$user = Auth::user();
@@ -116,10 +96,6 @@ Route::get('articulos/(:num)', function($itemId) {
 		->with('item', $item);
 });
 
-Route::get('logout', function() {
-	Auth::logout();
-	return Redirect::to('/');
-});
 /*
 |--------------------------------------------------------------------------
 | Application 404 & 500 Error Handlers
