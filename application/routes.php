@@ -36,60 +36,65 @@ Route::controller( Controller::detect() );
 
 Route::get('/', function()
 {	
+	//if the user enters directly to '/'
+	//we assume he's viewing the landing page
+	//hence we let know the template about this
+	//this will allow AngularJS to do client-side rendering
 	return View::make('templates.main')->with('isLanding', true);
 });
 
 Route::get('login', function() {
-    return View::make('pages.login');
+	return View::make('pages.login');
 });
 
 Route::post('login', function() {
-    $userdata = array(
-        'username' => Input::get('username'),
-        'password' => Input::get('password')
-    );
-    if ( Auth::attempt($userdata) )
-    {
-        return Redirect::to('/');
-    }
-    else
-    {
-        return Redirect::to('login')
-            ->with('login_errors', true);
-    }
+	$userdata = array(
+		'username' => Input::get('username'),
+		'password' => Input::get('password')
+	);
+	if ( Auth::attempt($userdata) )
+	{
+		return Redirect::to('/');
+	}
+	else
+	{
+		return Redirect::to('login')
+			->with('login_errors', true);
+	}
 });
 
+//we need to check for auth before attempting to do this action
 Route::get('renta', array('before' => 'auth', 'do' => function() {
 	$user = Auth::user();
 	return View::make('pages.newitem')->with('user', $user);
 }));
-Route::post('renta', array('before' => 'auth', 'do' => function() {
 
-	// let's get the new post from the POST data
-	// this is much safer than using mass assignment
+// let's get the new post from the POST data
+// this is much safer than using mass assignment
+Route::post('renta', array('before' => 'auth', 'do' => function() {
 	$user = Auth::user();
 
 	$new_item = array(
-	    'title'     => Input::get('title'),
-	    'description' => Input::get('description'),
-	    'user_id' => $user->id
+		'title'     => Input::get('title'),
+		'description' => Input::get('description'),
+		'user_id' => $user->id
 	);
 	// let's setup some rules for our new data
 	// I'm sure you can come up with better ones
 	$rules = array(
-	    'title'     => 'required|min:3|max:128',
-	    'description'      => 'required'
+		'title'     => 'required|min:3|max:128',
+		'description'      => 'required'
 	);
 	// make the validator
 	$v = Validator::make($new_item, $rules);
 	if ( $v->fails() )
 	{
-	    // redirect back to the form with
-	    // errors, input and our currently
-	    // logged in user
-	    return Redirect::to('publica')
-	            ->with_errors($v)
-	            ->with_input();
+		// redirect back to the form with
+		// errors, input and our currently
+		// logged in user
+		return Redirect::to('publica')
+				->with_errors($v)
+				->with_input();
 	}
 	// create the new post
 	$item = new Item($new_item);
@@ -100,22 +105,20 @@ Route::post('renta', array('before' => 'auth', 'do' => function() {
 }));
 
 Route::get('/catalogo', function() {
-    // lets get our posts and eager load the
-    // author
-    $items = Item::with('id')->all();
-    return View::make('pages.listing')
-        ->with('items', $items);
+	$items = Item::with('id')->all();
+	return View::make('pages.listing')
+		->with('items', $items);
 });
 
 Route::get('articulos/(:num)', function($itemId) {
-    $item = Item::find($itemId);
-    return View::make('pages.show-item')
-        ->with('item', $item);
+	$item = Item::find($itemId);
+	return View::make('pages.show-item')
+		->with('item', $item);
 });
 
 Route::get('logout', function() {
-    Auth::logout();
-    return Redirect::to('/');
+	Auth::logout();
+	return Redirect::to('/');
 });
 /*
 |--------------------------------------------------------------------------

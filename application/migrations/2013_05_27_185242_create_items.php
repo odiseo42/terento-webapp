@@ -10,12 +10,13 @@ class Create_Items {
 	public function up()
 	{
 		Schema::create('items', function($table) {
-		    $table->increments('id');
-		    $table->integer('user_id');	
+			$table->increments('id');
+			$table->integer('user_id');	
 			$table->index('user_id');	
-		    $table->string('title', 50);
-		    $table->text('description', 124);
-		    $table->timestamps();
+			$table->string('title', 50);
+			$table->text('description', 124);
+			$table->decimal('price', 10, 2);
+			$table->timestamps();
 		});
 	}
 
