@@ -10,7 +10,7 @@
 			<li><a href="/renta">Renta</a></li>
 			<li><a href="/catalogo">Catálogo</a></li>
 			@if ( Auth::guest() )
-				<li>{{ HTML::link('singup', 'Sign Up') }}</li>
+				<li>{{ HTML::link('signup', 'Sign Up') }}</li>
 			@endif			
 		</ul>
  
