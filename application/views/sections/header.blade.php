@@ -9,6 +9,9 @@
 			<li class="active"><a href="/">Home</a></li>
 			<li><a href="/renta">Renta</a></li>
 			<li><a href="/catalogo">Catálogo</a></li>
+			@if ( Auth::guest() )
+				<li>{{ HTML::link('singup', 'Sign Up') }}</li>
+			@endif			
 		</ul>
  
 		<ul class="nav pull-right">
@@ -17,7 +20,8 @@
 				<li>{{ HTML::link('login', 'Login') }}</li>
 			@else
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi cuenta <b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->username }} | 
+Mi cuenta <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="#">Mis artículos</a></li>
 						<li><a href="#">Mis rentas</a></li>
